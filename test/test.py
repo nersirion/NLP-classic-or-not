@@ -1,7 +1,12 @@
 
 import re
+
 import os
+import pytest
 import src.utils as utils
+
+
+
 test_str = 'xfdf fsdaf sa dfsd fsd d asadf sadf lkdfl ldfk alsd ldakl'
 def test_split_str():
     result = utils.split_str(test_str)
@@ -32,6 +37,26 @@ def test_create_data():
 
 def test_concat_data():
     test_str = ["join", "party", "please"]
-    for x in test_str: result=con_data(x)
+    concat_data = utils.DataAggregator()
+    for x in test_str: result=concat_data(x)
+    result = concat_data.sequence.strip()
     assert result == "join party please"
+
+true_result = [{"text": "Текст для тестов."},
+              {"text": "Один, два, три."},
+              {"text": "Четыре, восемь. как-то"},
+              {"text": "так и никак"},
+              {"text": "иначе"}]
+
+def test_read_file():
+    path = r"C:\Users\Nersirion\NLP_classis_or_not\test\files_for_test\test_file.txt"
+    result = utils.read_file(path)
+    assert result == true_result 
+
+def test_FilesList():
+    path = r"C:\Users\Nersirion\NLP_classis_or_not\test"
+    fl = utils.FileReader(path)
+    for r in fl: pass
+    result = fl.data_agg.data
+    assert result == true_result 
 

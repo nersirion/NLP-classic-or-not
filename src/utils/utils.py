@@ -1,9 +1,11 @@
 import re
 import os
+import pandas as pd
+
+import config
 
 
-NUMBER = 3
-def split_str(x:str, token_split:int=3) -> list:
+def split_str(x:str, token_split:int=config.TOKEN_SPLIT) -> list:
     tokens = x.split()
     split_range = range(0, len(tokens), token_split)
     result = [tokens[i:i+token_split] for i in split_range]
@@ -35,13 +37,14 @@ class DataAggregator:
     def reset_sequence(self):
         self.sequence = ""
 
+
 def find_comment(x:str) -> list:
     pattern = '\С. \d+|\с. \d+|\(\d+'
     return re.findall(pattern, x)
 
 def find_values_text(x:str) -> bool:
     comment = find_comment(x)
-    if len(x) > 3 and not comment:
+    if len(x) > config.MIN_LEN_FOR_STR and not comment:
         return True
     return False
 
@@ -95,9 +98,8 @@ class FileReader:
 
 
 
-
-def create_dataset():
-    fl = FileReader(config.PATH)
+def create_dataset(path:str=config.PATH):
+    fl = FileReader(path)
     for folder in fl:
         print(f"Обрабатываются файлы в папке {folder}")
     df = pd.DataFrame(fl.data_agg.data)

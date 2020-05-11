@@ -2,14 +2,16 @@
 import re
 
 import os
+import json
 import pytest
+import pandas as pd
 import src.utils as utils
 
 
 
 test_str = 'xfdf fsdaf sa dfsd fsd d asadf sadf lkdfl ldfk alsd ldakl'
 def test_split_str():
-    result = utils.split_str(test_str)
+    result = utils.split_str(test_str, token_split=3)
     assert len(result) == 4
 
 def test_split_str_notchange():
@@ -35,12 +37,13 @@ def test_create_data():
                      {'text': 'asadf sadf lkdfl'},
                      {'text': 'ldfk alsd ldakl'}]
 
+path = r"C:\Users\Nersirion\NLP_classis_or_not\test"   
 def test_concat_data():
     test_str = ["join", "party", "please"]
-    concat_data = utils.DataAggregator()
-    for x in test_str: result=concat_data(x)
-    result = concat_data.sequence.strip()
-    assert result == "join party please"
+    file_reader = utils.FileReader(path)
+    for x in test_str: file_reader(x)
+    result = file_reader.data
+    assert result == [{"text": "join party please"}]
 
 true_result = [{"text": "Текст для тестов."},
               {"text": "Один, два, три."},
@@ -49,14 +52,22 @@ true_result = [{"text": "Текст для тестов."},
               {"text": "иначе"}]
 
 def test_read_file():
-    path = r"C:\Users\Nersirion\NLP_classis_or_not\test\files_for_test\test_file.txt"
-    result = utils.read_file(path)
+    file_path = r"C:\Users\Nersirion\NLP_classis_or_not\test\files_for_test\test_file.txt"
+    file_reader = utils.FileReader(path)
+    file_reader.read_file(file_path)
+    result = file_reader.data
     assert result == true_result 
+
 
 def test_FilesList():
-    path = r"C:\Users\Nersirion\NLP_classis_or_not\test"
-    fl = utils.FileReader(path)
-    for r in fl: pass
-    result = fl.data_agg.data
+    fr = utils.FileReader(path)
+    for r in fr: pass
+    result = fr.data
     assert result == true_result 
 
+def test_create_dataset():
+    utils.create_dataset(path)
+    json_path = f"{path}/dataset.json"
+    with open(json_path) as json_file:
+        result = json.load(json_file)
+    assert result == true_result

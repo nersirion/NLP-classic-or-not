@@ -30,31 +30,33 @@ def test_find_values_text():
     result = utils.find_values_text(test_str)
     assert result == False
 
+category = "test"
 def test_create_data():
-   result = utils.create_data(test_str)
-   assert result == [{'text': 'xfdf fsdaf sa'},
-                     {'text': 'dfsd fsd d'},
-                     {'text': 'asadf sadf lkdfl'},
-                     {'text': 'ldfk alsd ldakl'}]
+    result = utils.create_data(test_str, category)
+    assert result == [{'text': 'xfdf fsdaf sa', "category": "test"},
+                     {'text': 'dfsd fsd d', "category": "test"},
+                     {'text': 'asadf sadf lkdfl', "category": "test"},
+                     {'text': 'ldfk alsd ldakl', "category": "test"}]
 
 path = r"C:\Users\Nersirion\NLP_classis_or_not\test"   
 def test_concat_data():
     test_str = ["join", "party", "please"]
     file_reader = utils.FileReader(path)
-    for x in test_str: file_reader(x)
+    for x in test_str: file_reader(x, category)
     result = file_reader.data
-    assert result == [{"text": "join party please"}]
+    assert result == [{"text": "join party please", "category": "test"}]
 
-true_result = [{"text": "Текст для тестов."},
-              {"text": "Один, два, три."},
-              {"text": "Четыре, восемь. как-то"},
-              {"text": "так и никак"},
-              {"text": "иначе"}]
+true_result = [{"text": "Текст для тестов.", "category": "files_for_test"},
+              {"text": "Один два три", "category": "files_for_test"},
+              {"text": "Четыре восемь както", "category": "files_for_test"},
+              {"text": "так и никак", "category": "files_for_test"},
+              {"text": "иначе", "category": "files_for_test"}]
 
 def test_read_file():
     file_path = r"C:\Users\Nersirion\NLP_classis_or_not\test\files_for_test\test_file.txt"
     file_reader = utils.FileReader(path)
-    file_reader.read_file(file_path)
+    category = "files_for_test"
+    file_reader.read_file(file_path, category)
     result = file_reader.data
     assert result == true_result 
 

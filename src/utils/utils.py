@@ -3,7 +3,7 @@ import os
 import json
 import pandas as pd
 
-import config
+import src.config as config
 
 
 def split_str(x:str, token_split:int=config.TOKEN_SPLIT) -> list:

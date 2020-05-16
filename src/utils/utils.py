@@ -2,8 +2,7 @@ import re
 import os
 import json
 import pandas as pd
-
-import src.config as config
+import config
 
 
 def split_str(x:str, token_split:int=config.TOKEN_SPLIT) -> list:
@@ -26,7 +25,7 @@ def clean_numbers(x):
     return x
 
 class DataAggregator:
-    
+
     def __init__(self):
         self.sequence = ""
         self.data = []
@@ -36,7 +35,7 @@ class DataAggregator:
         if check_len_tokens(self.sequence):
             self.data += create_data(self.sequence, category)
             self.reset_sequence()
-    
+
     def reset_sequence(self):
         self.sequence = ""
 
@@ -107,7 +106,7 @@ def create_dataset(path:str=config.PATH):
     for folder in fr:
         print(f"{folder}...")
     save_path = f"{path}/dataset.json"
-    fr.data = cut_short_str(fr.data) 
+    fr.data = cut_short_str(fr.data)
     with open(save_path, "w") as json_file:
         json.dump(fr.data, json_file)
     print("Done")

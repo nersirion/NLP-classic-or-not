@@ -1,6 +1,6 @@
 import joblib
 from flask import Flask,render_template,url_for,request
-import pandas as pd 
+import pandas as pd
 from utils import clean_text, check_len_tokens, final_check
 
 app = Flask(__name__)
@@ -12,14 +12,14 @@ def home():
 @app.route('/predict',methods=['POST'])
 def predict():
 
-    tfidf = joblib.load("Tfidf.joblib")
-    lr = joblib.load("Tfidf-Logreg.joblib")
+    tfidf = joblib.load("TfIdf.joblib")
+    lr = joblib.load("TfIdf-LogReg.joblib")
     if request.method == 'POST':
         message = request.form['message']
         text = [message]
         text = clean_text(text)
         if not check_len_tokens(text) and final_check(text):
-            matrix = tfidf.transform(text)
+            matrix = tfidf.transform([text])
             my_prediction = lr.predict(matrix)
         else:
             my_prediction = 2
@@ -28,4 +28,4 @@ def predict():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=8080, debug=True)
